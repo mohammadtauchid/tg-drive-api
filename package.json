@@ -1,0 +1,40 @@
+{
+  "name": "tg-drive-api",
+  "version": "1.0.0",
+  "description": "API for TGDrive",
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "node src/index.ts",
+    "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts | bunyan",
+    "test": "jest --collectCoverage --expand",
+    "lint": "npm run lint",
+    "lint:fix": "npm run lint --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mohammadtauchid/tg-drive-api.git"
+  },
+  "author": "Mohammad Tauchid",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mohammadtauchid/tg-drive-api/issues"
+  },
+  "homepage": "https://github.com/mohammadtauchid/tg-drive-api#readme",
+  "devDependencies": {
+    "@types/express": "^5.0.1",
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.15.2",
+    "bunyan": "^1.8.15",
+    "eslint": "^9.25.1",
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.10",
+    "prettier": "^3.5.3",
+    "ts-jest": "^29.3.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0"
+  }
+}
