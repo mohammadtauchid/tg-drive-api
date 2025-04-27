@@ -15,7 +15,7 @@ const schemaValidation =
 
     Object.assign(res.locals, {
       payload: {
-        files: fileSchema ? validateSchema(files, fileSchema) : {},
+        files: fileSchema ? validateSchema(files, fileSchema) : files,
       },
     });
 

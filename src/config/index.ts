@@ -9,6 +9,7 @@ const config: Config = {
   botToken: String(process.env.BOT_TOKEN),
   chatId: String(process.env.CHAT_ID),
   telegramBaseUrl: String(process.env.TELEGRAM_BASE_URL),
+  chunkSize: Number(process.env.CHUNK_SIZE)
 };
 
 export default config;
