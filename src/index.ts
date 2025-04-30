@@ -1,8 +1,12 @@
 import express from 'express';
-
 import fileUpload from 'express-fileupload';
 
+// @ts-ignore
+import MongoModels from 'mongo-models';
+
 import config from './config';
+import { File } from './models';
+import { FileRepository } from './repositories';
 import { file } from './routes';
 import { FileService } from './service';
 import { errorHandler } from './middlewares';
@@ -14,23 +18,45 @@ const app = express();
 app.use(express.json());
 app.use(fileUpload());
 
-const createService = (): Services => ({
-  fileService: new FileService({ config }),
-});
+const createModel = async () => {
+  await MongoModels.connect({
+    uri: config.databaseURL,
+    db: config.databaseName,
+  });
 
-const initializeDependencies = () => {
-  app.locals.service = createService();
+  return {
+    File,
+  };
 };
 
-const main = (): void => {
+const createRepository = async () => {
+  const { File } = await createModel();
+
+  return { fileRepository: new FileRepository({ db: File }) };
+};
+
+const createService = async (): Promise<Services> => {
+  const { fileRepository } = await createRepository();
+
+  return {
+    fileService: new FileService({ config, fileRepository }),
+  };
+};
+
+const initializeDependencies = async (): Promise<void> => {
+  app.locals.service = await createService();
+};
+
+const main = async (): Promise<void> => {
   initializeDependencies();
+
   app.use(file);
+
+  await app.listen(config.port, () => {
+    console.log(`server is running on port ${config.port}`);
+  });
 };
 
 main();
 
 app.use(errorHandler);
-
-app.listen(config.port, () => {
-  console.log(`server is running on port ${config.port}`);
-});

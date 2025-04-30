@@ -3,7 +3,9 @@ interface Config {
   botToken: string;
   chatId: string;
   telegramBaseUrl: string;
-  chunkSize: number
+  chunkSize: number;
+  databaseURL: string;
+  databaseName: string;
 }
 
 export default Config;

@@ -1,12 +1,18 @@
 import Config from './config/types';
+import { FileRepository } from './repositories';
 import { FileService } from './service';
+
+interface Repositories {
+  fileRepository?: FileRepository
+}
 
 interface Services {
   fileService: FileService;
 }
 
-interface Options {
-  config?: Config
+interface ServicesOptions extends Repositories {
+  config?: Config;
+  
 }
 
-export { Services, Options };
+export { Services, ServicesOptions };

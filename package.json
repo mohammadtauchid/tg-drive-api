@@ -5,7 +5,7 @@
   "main": "src/index.ts",
   "scripts": {
     "start": "node src/index.ts",
-    "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts | bunyan",
+    "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts --log-error | bunyan",
     "test": "jest --collectCoverage --expand",
     "lint": "npm run lint",
     "lint:fix": "npm run lint --fix"
@@ -40,6 +40,9 @@
     "express": "^5.1.0",
     "express-fileupload": "^1.5.1",
     "form-data": "^4.0.2",
-    "joi": "^17.13.3"
+    "joi": "^17.13.3",
+    "mongo-models": "^3.0.4",
+    "mongodb": "^6.16.0",
+    "mongoose": "^8.14.0"
   }
 }

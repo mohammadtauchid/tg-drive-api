@@ -5,24 +5,33 @@ import { fileBufferSplitter } from '../utils/fileUtils/fileUtils';
 
 import Config from '../config/types';
 import { UploadFilePayload } from '../routes/file/types';
-import { Options } from '../types';
+import { ServicesOptions } from '../types';
+import { FileRepository } from '../repositories';
 
 const MEGABYTE = 1024 * 1024;
 
 class FileService {
   config: Config;
+  fileRepository: FileRepository;
 
-  constructor(options: Options) {
+  constructor(options: ServicesOptions) {
     Object.assign(this, options);
   }
 
   async uploadFile(payload: UploadFilePayload): Promise<Object> {
     const { file } = payload;
-    const { chunkSize } = this.config;
+    const { chunkSize, chatId } = this.config;
 
     const splittedFile = fileBufferSplitter(file.data, chunkSize * MEGABYTE);
- 
-    const result = this.uploadToTelegram(splittedFile, file.name)
+
+    const files = await this.uploadToTelegram(splittedFile, file.name);
+
+    const result = await this.fileRepository.insertFile({
+      files,
+      fileName: file.name,
+      fileSize: file.size,
+      userId: chatId,
+    });
 
     return result;
   }
@@ -34,7 +43,9 @@ class FileService {
       fileBuffers.map(async (buffer: Buffer, index: number) => {
         const uploadedFile = new FormData();
 
-        uploadedFile.append('document', buffer, { filename: `${filename}.chunk${index}` });
+        uploadedFile.append('document', buffer, {
+          filename: `${filename}.chunk${index}`,
+        });
         uploadedFile.append('chat_id', chatId);
 
         const { data } = await axios.post(
@@ -42,11 +53,11 @@ class FileService {
           uploadedFile,
         );
 
-        return data
+        return data;
       }),
     );
 
-    return result
+    return result;
   }
 }
 
