@@ -1,18 +1,17 @@
-import Config from './config/types';
+import { TelegramConnector } from './connectors';
 import { FileRepository } from './repositories';
 import { FileService } from './service';
 
 interface Repositories {
-  fileRepository?: FileRepository
+  fileRepository: FileRepository;
+}
+
+interface Connectors {
+  telegramConnector: TelegramConnector;
 }
 
 interface Services {
   fileService: FileService;
 }
 
-interface ServicesOptions extends Repositories {
-  config?: Config;
-  
-}
-
-export { Services, ServicesOptions };
+export { Connectors, Repositories, Services };

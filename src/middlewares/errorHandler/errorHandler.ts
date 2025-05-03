@@ -1,6 +1,11 @@
-import { AppError, Request, Response, NextFunction } from './errorHandler.types';
+import {
+  AppError,
+  Request,
+  Response,
+  NextFunction,
+} from './errorHandler.types';
 
-export default (
+const errorHandler = (
   err: AppError,
   req: Request,
   res: Response,
@@ -10,3 +15,5 @@ export default (
     message: err.message || 'Internal Server Error',
   });
 };
+
+export default errorHandler;

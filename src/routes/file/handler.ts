@@ -12,7 +12,7 @@ const uploadFileHandler = async (
   } = res;
 
   const result = await fileService.uploadFile({ file: files.file });
-  res.send(result);
+  res.status(201).json(result);
 };
 
 export { uploadFileHandler };

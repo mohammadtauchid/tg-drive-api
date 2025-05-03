@@ -1,15 +1,25 @@
-import Joi from 'joi';
+import {
+  Validation,
+  Schema,
+  Request,
+  Response,
+  NextFunction,
+  Payload,
+} from './schemaValidation.types';
 
-const validateSchema = (payload: any, schema: any) => {
+const validateSchema = (payload: Payload, schema: Schema) => {
   const { error, value } = schema.validate(payload);
+
   if (error) {
     throw error;
   }
+
   return value;
 };
 
 const schemaValidation =
-  (validation: any) => (req: any, res: any, next: any) => {
+  (validation: Validation) =>
+  (req: Request, res: Response, next: NextFunction) => {
     const { files: fileSchema } = validation;
     const { files } = req;
 

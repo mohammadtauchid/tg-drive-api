@@ -1,7 +1,11 @@
-class FileRepository {
-  db: any;
+import { File } from '../../models';
 
-  constructor(options: any) {
+import { FileRepositoryOptions } from './FileRepository.types';
+
+class FileRepository {
+  db: typeof File;
+
+  constructor(options: FileRepositoryOptions) {
     Object.assign(this, options);
   }
 
@@ -9,23 +13,14 @@ class FileRepository {
     return this.db.find();
   }
 
-  async insertFile(payload: any) {
-    const { files, fileName, fileSize, userId } = payload;
-
-    const fileIds = files.map(
-      ({
-        result: {
-          // @ts-ignore
-          document: { file_id },
-        },
-      }) => file_id,
+  async save(payload: Object): Promise<Object> {
+    return this.db.insertOne(
+      new this.db({
+        ...payload,
+        createdAt: new Date(),
+        modifiedAt: new Date(),
+      }),
     );
-
-    const result = await this.db.insertOne({
-      fileIds, fileName, fileSize, userId
-    })
-
-    return result
   }
 }
 

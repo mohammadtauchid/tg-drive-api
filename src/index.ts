@@ -1,17 +1,18 @@
 import express from 'express';
 import fileUpload from 'express-fileupload';
 
-// @ts-ignore
 import MongoModels from 'mongo-models';
 
 import config from './config';
+import { errorHandler } from './middlewares';
+
+import { TelegramConnector } from './connectors';
 import { File } from './models';
 import { FileRepository } from './repositories';
 import { file } from './routes';
 import { FileService } from './service';
-import { errorHandler } from './middlewares';
 
-import { Services } from './types';
+import { Connectors, Repositories, Services } from './types';
 
 const app = express();
 
@@ -29,17 +30,28 @@ const createModel = async () => {
   };
 };
 
-const createRepository = async () => {
+const createRepository = async (): Promise<Repositories> => {
   const { File } = await createModel();
 
   return { fileRepository: new FileRepository({ db: File }) };
 };
 
+const createConnectors = (): Connectors => {
+  return {
+    telegramConnector: new TelegramConnector({ config }),
+  };
+};
+
 const createService = async (): Promise<Services> => {
   const { fileRepository } = await createRepository();
+  const { telegramConnector } = createConnectors();
 
   return {
-    fileService: new FileService({ config, fileRepository }),
+    fileService: new FileService({
+      config,
+      fileRepository,
+      telegramConnector,
+    }),
   };
 };
 
@@ -48,15 +60,15 @@ const initializeDependencies = async (): Promise<void> => {
 };
 
 const main = async (): Promise<void> => {
-  initializeDependencies();
+  await initializeDependencies();
 
   app.use(file);
 
   await app.listen(config.port, () => {
     console.log(`server is running on port ${config.port}`);
   });
+
+  app.use(errorHandler);
 };
 
 main();
-
-app.use(errorHandler);
